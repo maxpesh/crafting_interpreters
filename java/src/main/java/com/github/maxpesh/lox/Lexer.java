@@ -66,14 +66,7 @@ class Lexer {
                         advance();
                     }
                 } else if (match('*')) {
-                    while (!(peek() == '*' && peekNext() == '/') && !isAtEnd()) {
-                        if (peek() == '\n') {
-                            line++;
-                        }
-                        advance();
-                    }
-                    advance(); // skip *
-                    advance(); // skip /
+                    blockComment();
                 } else {
                     addToken(TokenType.SLASH);
                 }
@@ -132,6 +125,23 @@ class Lexer {
         var text = source.substring(start, current);
         var tokenType = KEYWORDS.getOrDefault(text, TokenType.IDENTIFIER);
         addToken(tokenType);
+    }
+
+    private void blockComment() {
+        while (!(peek() == '*' && peekNext() == '/') && !isAtEnd()) {
+            if (peek() == '\n') {
+                line++;
+            } else if (peek() == '/' && peekNext() == '*') {
+                // nested block comment
+                advance(); // skip /
+                advance(); // skip *
+                blockComment();
+                continue;
+            }
+            advance();
+        }
+        advance(); // skip *
+        advance(); // skip /
     }
 
     private char peek() {

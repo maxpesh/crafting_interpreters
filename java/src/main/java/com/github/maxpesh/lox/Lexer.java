@@ -65,6 +65,15 @@ class Lexer {
                     while (peek() != '\n' && !isAtEnd()) {
                         advance();
                     }
+                } else if (match('*')) {
+                    while (!(peek() == '*' && peekNext() == '/') && !isAtEnd()) {
+                        if (peek() == '\n') {
+                            line++;
+                        }
+                        advance();
+                    }
+                    advance(); // skip *
+                    advance(); // skip /
                 } else {
                     addToken(TokenType.SLASH);
                 }

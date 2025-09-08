@@ -3,8 +3,7 @@ C-style comments can contain
 multiple lines.
 */
 
-/*
-  /*
+/*/*
     nested comment
     /* nested-nested block comment */*/
 */
